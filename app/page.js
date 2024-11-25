@@ -1,4 +1,4 @@
-'use client'; // Declara o componente como Client Component
+'use client';
 import React, { useState, useEffect } from 'react';
 
 export default function Home() {
@@ -25,20 +25,18 @@ export default function Home() {
     setFonts(initialFonts);
 
     const interval = setInterval(() => {
-      // Atualiza as fontes de cada letra
       setFonts((prevFonts) =>
         prevFonts.map(
           () => fontFamilies[Math.floor(Math.random() * fontFamilies.length)]
         )
       );
-      // Atualiza o índice da logo
       setCurrentLogo((prev) => (prev + 1) % logos.length);
-    }, 500); // Troca a cada 500ms
+    }, 500);
 
-    return () => clearInterval(interval); // Limpa o intervalo ao desmontar
+    return () => clearInterval(interval);
   }, []);
 
-  const text = 'TRABALHO DESENVOLVIMENTO WEB';
+  const textLines = ['TRABALHO', 'DESENVOLVIMENTO WEB'];
   const logos = [
     '/images/logo1.webp',
     '/images/logo2.png',
@@ -53,18 +51,20 @@ export default function Home() {
   return (
     <div className="animatedBackground">
       <div className="textContainer">
-        {text.split('').map((char, index) => (
-          <span
-            key={index}
-            style={{
-              fontFamily: fonts[index] || 'Arial, sans-serif',
-              fontWeight: 'bold',
-              fontSize: '4rem',
-              margin: '0 5px',
-            }}
-          >
-            {char.trim() === '' ? '\u00A0' : char}
-          </span>
+        {textLines.map((line, lineIndex) => (
+          <div key={lineIndex} className="textLine">
+            {line.split('').map((char, index) => (
+              <span
+                key={index}
+                style={{
+                  fontFamily: fonts[index + lineIndex * 20] || 'Arial, sans-serif',
+                  fontWeight: 'bold',
+                }}
+              >
+                {char.trim() === '' ? '\u00A0' : char}
+              </span>
+            ))}
+          </div>
         ))}
       </div>
       <div className="logoContainer">
@@ -100,22 +100,67 @@ export default function Home() {
 
         .textContainer {
           display: flex;
+          flex-direction: column;
+          text-align: center;
           text-transform: uppercase;
           color: #ffffff;
           text-shadow: 0 0 5px #000000, 0 0 10px #000000, 0 0 15px rgba(0, 0, 0, 0.8);
+          max-width: 90%;
+        }
+
+        .textLine {
+          display: inline-block;
+          white-space: nowrap;
+          margin: 10px 0;
+        }
+
+        .textLine span {
+          font-size: clamp(1rem, 8vw, 4rem);
+          margin: 0 2px;
         }
 
         .logoContainer {
           margin-top: 20px;
-          height: 150px; /* Altura fixa para o container */
+          height: 15vh;
           display: flex;
           justify-content: center;
           align-items: center;
         }
 
         .logo {
-          max-width: 150px; /* Tamanho máximo da largura */
-          max-height: 100%; /* Ajusta dentro do container fixo */
+          max-width: 20vw;
+          max-height: 100%;
+          object-fit: contain;
+        }
+
+        @media (max-width: 768px) {
+          .textContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+
+          .textLine {
+            white-space: normal;
+          }
+
+          .textLine span {
+            font-size: clamp(1rem, 5vw, 2.5rem);
+          }
+
+          .logo {
+            max-width: 40vw;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .textLine span {
+            font-size: clamp(0.8rem, 4vw, 2rem);
+          }
+
+          .logo {
+            max-width: 50vw;
+          }
         }
       `}</style>
     </div>
