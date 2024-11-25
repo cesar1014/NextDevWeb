@@ -19,7 +19,9 @@ export default function Home() {
       'Papyrus, fantasy',
     ];
 
-    const initialFonts = Array.from({ length: 26 }, () =>
+    const text = 'TRABALHO DESENVOLVIMENTO WEB';
+    const totalChars = text.length;
+    const initialFonts = Array.from({ length: totalChars }, () =>
       fontFamilies[Math.floor(Math.random() * fontFamilies.length)]
     );
     setFonts(initialFonts);
@@ -51,21 +53,24 @@ export default function Home() {
   return (
     <div className="animatedBackground">
       <div className="textContainer">
-        {textLines.map((line, lineIndex) => (
-          <div key={lineIndex} className="textLine">
-            {line.split('').map((char, index) => (
-              <span
-                key={index}
-                style={{
-                  fontFamily: fonts[index + lineIndex * 20] || 'Arial, sans-serif',
-                  fontWeight: 'bold',
-                }}
-              >
-                {char.trim() === '' ? '\u00A0' : char}
-              </span>
-            ))}
-          </div>
-        ))}
+        {textLines.map((line, lineIndex) => {
+          const startIndex = lineIndex === 0 ? 0 : textLines[0].length + 1;
+          return (
+            <div key={lineIndex} className="textLine">
+              {line.split('').map((char, index) => (
+                <span
+                  key={index}
+                  style={{
+                    fontFamily: fonts[startIndex + index] || 'Arial, sans-serif',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {char.trim() === '' ? '\u00A0' : char}
+                </span>
+              ))}
+            </div>
+          );
+        })}
       </div>
       <div className="logoContainer">
         <img src={logos[currentLogo]} alt="Logo" className="logo" />
@@ -91,6 +96,7 @@ export default function Home() {
           align-items: center;
           height: 100vh;
           width: 100vw;
+          overflow: hidden;
           background: linear-gradient(135deg, #0f172a, #1e293b, #2563eb, #7c3aed, #4c1d95);
           background-size: 300% 300%;
           animation: gradientMove 8s ease infinite;
@@ -105,7 +111,6 @@ export default function Home() {
           text-transform: uppercase;
           color: #ffffff;
           text-shadow: 0 0 5px #000000, 0 0 10px #000000, 0 0 15px rgba(0, 0, 0, 0.8);
-          max-width: 90%;
         }
 
         .textLine {
